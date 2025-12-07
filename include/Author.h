@@ -12,8 +12,8 @@ public:
     Author(const std::string& name, const std::string& country);
     
     // Getters
-    std::string getName() const;
-    std::string getCountry() const;
+    const std::string& getName() const;
+    const std::string& getCountry() const;
     
     // operator
     friend std::ostream& operator<<(std::ostream& os, const Author& author);

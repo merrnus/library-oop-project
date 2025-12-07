@@ -20,7 +20,7 @@ public:
     ~Book();                               // Destructor
     
     // Getters
-    std::string getTitle() const;
+    const std::string& getTitle() const;
     const Author& getAuthor() const;
     int getYear() const;
     int getStock() const;

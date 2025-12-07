@@ -11,7 +11,7 @@ private:
 
 public:
     // Constructor
-    Library(const std::string& name);
+    explicit Library(const std::string& name);
     
     // Public functions (3 non-trivial)
     void addBook(const Book& book);
@@ -22,7 +22,7 @@ public:
     void displayBooks() const;
     
     // Getters
-    std::string getName() const;
+    const std::string& getName() const;
     int getBookCount() const;
     
     // operator
