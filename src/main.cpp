@@ -59,6 +59,19 @@ int main() {
     // Try removing non-existent book
     library.removeBook("Non-existent Book");
     
+    // Test unused functions
+    std::cout << "\n=== Testing Unused Functions ===" << "\n";
+    std::cout << "Author country: " << author1.getCountry() << "\n";
+    std::cout << "Book year: " << book3.getYear() << "\n";
+    std::cout << "Book stock: " << book3.getStock() << "\n";
+    
+    // Test setStock
+    Book testBook("Test", author1, 2024, 5);
+    testBook.setStock(10);
+    std::cout << "Updated stock: " << testBook << "\n";
+    
+    std::cout << "Total books in library: " << library.getBookCount() << "\n";
+    
     std::cout << "\n=== Program finished ===" << "\n";
     return 0;
 }
