@@ -1,2 +1,1 @@
-5
-11 22 33 44 55
+# No keyboard input required - all data is hardcoded in main.cpp
