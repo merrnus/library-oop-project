@@ -1,3 +1,49 @@
+# Library Management System 📚
+
+A simple library management system built with C++ for Object-Oriented Programming course.
+
+## Description
+
+This project implements a library management system with the following features:
+- **Author management**: Store author information (name, country)
+- **Book management**: Track books with title, author, publication year, and stock
+- **Library operations**: Add, remove, and search books by author
+
+The system demonstrates core OOP concepts including:
+- Composition (Library → Book → Author)
+- Rule of Three (copy constructor, assignment operator, destructor)
+- Operator overloading (<<)
+- Encapsulation with private attributes and public methods
+
+## Project Structure
+```
+library-oop-project/
+├── include/          # Header files
+│   ├── Author.h
+│   ├── Book.h
+│   └── Library.h
+├── src/             # Implementation files
+│   ├── Author.cpp
+│   ├── Book.cpp
+│   ├── Library.cpp
+│   └── main.cpp
+└── CMakeLists.txt   # Build configuration
+```
+
+## Features
+
+- **Add books** to library collection
+- **Remove books** by title
+- **Search books** by author name
+- **Display** all books in library
+- **Copy operations** for book objects (copy constructor & assignment)
+
+## Development Note
+
+This project was developed with assistance from Claude (Anthropic) for learning C++ and OOP concepts. All code has been reviewed, understood, and tested by the developer.
+
+---
+
 # Nu primesc notă pentru că nu am pus titlu și descriere
 
 ### Folosiți template-ul corespunzător grupei voastre!
