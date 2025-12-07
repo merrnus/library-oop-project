@@ -5,11 +5,11 @@ Author::Author(const std::string& name, const std::string& country)
     : name(name), country(country) {}
 
 // Getters
-std::string Author::getName() const {
+const std::string& Author::getName() const {
     return name;
 }
 
-std::string Author::getCountry() const {
+const std::string& Author::getCountry() const {
     return country;
 }
 

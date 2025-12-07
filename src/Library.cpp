@@ -52,7 +52,7 @@ void Library::displayBooks() const {
 }
 
 // Getters
-std::string Library::getName() const {
+const std::string& Library::getName() const {
     return name;
 }
 

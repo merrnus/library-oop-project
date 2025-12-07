@@ -28,7 +28,7 @@ Book::~Book() {
 }
 
 // Getters
-std::string Book::getTitle() const {
+const std::string& Book::getTitle() const {
     return title;
 }
 
