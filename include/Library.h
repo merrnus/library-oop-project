@@ -38,6 +38,7 @@ public:
     void loadBooksFromFile(const std::string& filename);
     void loadMagazinesFromFile(const std::string& filename);
     void loadDVDsFromFile(const std::string& filename);
+    void loadAudioBooksFromFile(const std::string& filename);
     
     // Static function
     static int getTotalLibraries();

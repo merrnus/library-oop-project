@@ -20,6 +20,7 @@ int main() {
         library.loadBooksFromFile("data/books.txt");
         library.loadMagazinesFromFile("data/magazines.txt");
         library.loadDVDsFromFile("data/dvds.txt");
+        library.loadAudioBooksFromFile("data/audiobooks.txt");
         
         std::cout << "\n";
         
@@ -34,10 +35,13 @@ int main() {
         auto books = library.findItemsByType("Book");
         auto magazines = library.findItemsByType("Magazine");
         auto dvds = library.findItemsByType("DVD");
-        
+        auto audiobooks = library.findItemsByType("AudioBook");
+
         std::cout << "Books: " << books.size() << "\n";
         std::cout << "Magazines: " << magazines.size() << "\n";
         std::cout << "DVDs: " << dvds.size() << "\n";
+        std::cout << "AudioBooks: " << audiobooks.size() << "\n";
+
         
         // Calculate late fees (virtual function - tema specific!)
         std::cout << "\n=== Late Fee Calculations (Virtual Function) ===\n";
@@ -52,6 +56,10 @@ int main() {
         if (!dvds.empty()) {
             std::cout << "DVD '" << dvds[0]->getTitle() << "': " 
                       << dvds[0]->calculateLateFee(10) << " lei (10 days)\n";
+        }
+        if (!audiobooks.empty()) {
+            std::cout << "AudioBook '" << audiobooks[0]->getTitle() << "': " 
+                      << audiobooks[0]->calculateLateFee(10) << " lei (10 days)\n";
         }
         
         std::cout << "\n=== Testing Copy Constructor (Deep Copy) ===\n";

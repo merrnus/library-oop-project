@@ -55,6 +55,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     src/Book.cpp
     src/Magazine.cpp
     src/DVD.cpp
+    src/AudioBook.cpp
     src/Library.cpp
 )
 

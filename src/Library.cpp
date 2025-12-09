@@ -4,6 +4,7 @@
 #include "../include/Magazine.h"
 #include "../include/DVD.h"
 #include "../include/Author.h"
+#include "../include/AudioBook.h"
 #include <fstream>
 #include <sstream>
 
@@ -229,4 +230,37 @@ void Library::displayBooksWithAuthors() const {
     }
     
     std::cout << "Total books found: " << bookCount << "\n";
+}
+
+// Load audiobooks from file
+void Library::loadAudioBooksFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw InvalidItemException("Cannot open file: " + filename);
+    }
+    
+    std::string line;
+    while (std::getline(file, line)) {
+        // Parse: title|narrator_name|narrator_country|year|duration|format
+        size_t pos1 = line.find('|');
+        size_t pos2 = line.find('|', pos1 + 1);
+        size_t pos3 = line.find('|', pos2 + 1);
+        size_t pos4 = line.find('|', pos3 + 1);
+        size_t pos5 = line.find('|', pos4 + 1);
+        
+        if (pos1 == std::string::npos || pos5 == std::string::npos) continue;
+        
+        std::string title = line.substr(0, pos1);
+        std::string narratorName = line.substr(pos1 + 1, pos2 - pos1 - 1);
+        std::string narratorCountry = line.substr(pos2 + 1, pos3 - pos2 - 1);
+        int year = std::stoi(line.substr(pos3 + 1, pos4 - pos3 - 1));
+        int duration = std::stoi(line.substr(pos4 + 1, pos5 - pos4 - 1));
+        std::string format = line.substr(pos5 + 1);
+        
+        Author narrator(narratorName, narratorCountry);
+        addItem(std::make_unique<AudioBook>(title, narrator, year, duration, format));
+    }
+    
+    file.close();
+    std::cout << "Loaded audiobooks from: " << filename << "\n";
 }
