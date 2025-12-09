@@ -1,45 +1,100 @@
-# Library Management System 📚
+# Library Management System
 
-A simple library management system built with C++ for Object-Oriented Programming course.
+A comprehensive library management system demonstrating advanced OOP concepts in C++, including inheritance, polymorphism, exceptions, and file I/O.
 
-## Description
+## Features
 
-This project implements a library management system with the following features:
-- **Author management**: Store author information (name, country)
-- **Book management**: Track books with title, author, publication year, and stock
-- **Library operations**: Add, remove, and search books by author
+### M1 (Composition & Basics)
+- Object composition (Library → Book → Author)
+- Rule of Three implementation
+- Operator overloading
+- const correctness
 
-The system demonstrates core OOP concepts including:
-- Composition (Library → Book → Author)
-- Rule of Three (copy constructor, assignment operator, destructor)
-- Operator overloading (<<)
-- Encapsulation with private attributes and public methods
+### M2 (Inheritance & Advanced OOP)
+- **Inheritance Hierarchy**: Item (base) → Book, Magazine, DVD, AudioBook (derived)
+- **Polymorphism**: Virtual functions (display, calculateLateFee, clone)
+- **Smart Pointers**: unique_ptr for automatic memory management
+- **Exception Handling**: Custom exception hierarchy (LibraryException + 3 derived)
+- **File I/O**: Load items from text files (books.txt, magazines.txt, dvds.txt, audiobooks.txt)
+- **Dynamic Casting**: Safe downcasting with dynamic_cast
+- **Static Members**: Track total library instances
+- **Copy-and-Swap Idiom**: Deep copy with proper resource management
 
 ## Project Structure
 ```
 library-oop-project/
-├── include/          # Header files
+├── include/
+│   ├── Item.h              (Base class)
+│   ├── Book.h              (Derived from Item)
+│   ├── Magazine.h          (Derived from Item)
+│   ├── DVD.h               (Derived from Item)
+│   ├── AudioBook.h         (Derived from Item - 4th class)
 │   ├── Author.h
-│   ├── Book.h
-│   └── Library.h
-├── src/             # Implementation files
-│   ├── Author.cpp
+│   ├── Library.h
+│   └── LibraryExceptions.h (Exception hierarchy)
+├── src/
+│   ├── Item.cpp
 │   ├── Book.cpp
+│   ├── Magazine.cpp
+│   ├── DVD.cpp
+│   ├── AudioBook.cpp
+│   ├── Author.cpp
 │   ├── Library.cpp
 │   └── main.cpp
-└── CMakeLists.txt   # Build configuration
+├── data/
+│   ├── books.txt
+│   ├── magazines.txt
+│   ├── dvds.txt
+│   └── audiobooks.txt
+└── CMakeLists.txt
 ```
 
-## Features
+## Building and Running
+```bash
+# Configure
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 
-- **Add books** to library collection
-- **Remove books** by title
-- **Search books** by author name
-- **Display** all books in library
-- **Copy operations** for book objects (copy constructor & assignment)
+# Build
+cmake --build build
+
+# Run
+./build/oop
+```
+
+## Data Files Format
+
+**books.txt:**
+```
+title|author_name|author_country|year|stock
+```
+
+**magazines.txt:**
+```
+title|publisher|year|issue_number
+```
+
+**dvds.txt:**
+```
+title|director|year|duration
+```
+
+**audiobooks.txt:**
+```
+title|narrator_name|narrator_country|year|duration|format
+```
+
+## Design Decisions
+
+### Why Inheritance?
+The Item base class provides a common interface for all library items, allowing polymorphic behavior and code reuse.
+
+### Why Smart Pointers?
+`unique_ptr` provides automatic memory management, preventing memory leaks and simplifying ownership semantics.
+
+### Why Exception Hierarchy?
+Custom exceptions allow specific error handling for different failure scenarios (item not found, duplicates, invalid data).
 
 ## Development Note
-
 This project was developed with assistance from Claude (Anthropic) for learning C++ and OOP concepts. All code has been reviewed, understood, and tested by the developer.
 
 ---
