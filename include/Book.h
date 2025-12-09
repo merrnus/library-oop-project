@@ -1,33 +1,31 @@
 #pragma once
+#include "Item.h"
 #include "Author.h"
 #include <string>
 #include <iostream>
 
-class Book {
+class Book : public Item {
 private:
-    std::string title;
-    Author author;  // Composition!
-    int year;
+    Author author;
     int stock;
-
+    
 public:
-    // Constructor
+    // Constructor (calls Item constructor)
     Book(const std::string& title, const Author& author, int year, int stock);
     
-    // Rule of Three
-    Book(const Book& other);              // Copy constructor
-    Book& operator=(const Book& other);   // Copy assignment
-    ~Book();                               // Destructor
+    // Rule of Three (M1'den kalıyor)
+    Book(const Book& other);
+    Book& operator=(const Book& other);
+    ~Book();
+    
+    // Virtual functions override
+    void display() const override;
+    Book* clone() const override;
+    std::string getType() const override;
+    double calculateLateFee(int days) const override;
     
     // Getters
-    const std::string& getTitle() const;
     const Author& getAuthor() const;
-    int getYear() const;
     int getStock() const;
-    
-    // Setters
     void setStock(int newStock);
-    
-    // operator
-    friend std::ostream& operator<<(std::ostream& os, const Book& book);
 };

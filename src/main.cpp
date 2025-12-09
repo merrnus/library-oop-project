@@ -1,77 +1,104 @@
-#include "Library.h"
+#include "../include/Library.h"
+#include "../include/Book.h"
+#include "../include/Magazine.h"
+#include "../include/DVD.h"
+#include "../include/Author.h"
 #include <iostream>
+#include <memory>
 
 int main() {
-    std::cout << "=== Library Management System ===" << "\n\n";
+    std::cout << "=== Library Management System M2 ===\n\n";
     
-    // Create authors
-    Author author1("George Orwell", "UK");
-    Author author2("J.K. Rowling", "UK");
-    Author author3("Haruki Murakami", "Japan");
-    
-    std::cout << "Authors created:\n";
-    std::cout << "- " << author1 << "\n";
-    std::cout << "- " << author2 << "\n";
-    std::cout << "- " << author3 << "\n\n";
-    
-    // Create books
-    Book book1("1984", author1, 1949, 5);
-    Book book2("Animal Farm", author1, 1945, 3);
-    Book book3("Harry Potter", author2, 1997, 10);
-    Book book4("Norwegian Wood", author3, 1987, 2);
-    
-    // Create library
-    Library library("Central Library");
-    std::cout << "Created: " << library << "\n\n";
-    
-    // Add books
-    library.addBook(book1);
-    library.addBook(book2);
-    library.addBook(book3);
-    library.addBook(book4);
-    
-    // Display all books
-    library.displayBooks();
-    
-    // Test copy constructor
-    std::cout << "Testing copy constructor:\n";
-    Book book5 = book1;  // Copy constructor
-    std::cout << "Copied book: " << book5 << "\n\n";
-    
-    // Test copy assignment
-    std::cout << "Testing copy assignment:\n";
-    Book book6("Temp", author3, 2000, 1);
-    book6 = book2;  // Copy assignment
-    std::cout << "Assigned book: " << book6 << "\n\n";
-    
-    // Find books by author
-    std::cout << "Finding books by George Orwell:\n";
-    auto orwellBooks = library.findBooksByAuthor("George Orwell");
-    for (const auto& book : orwellBooks) {
-        std::cout << "- " << book << "\n";
+    try {
+        // Create library
+        Library library("Central Library");
+        std::cout << "Total libraries: " << Library::getTotalLibraries() << "\n\n";
+        
+        std::cout << "=== Loading Items from Files ===\n";
+        
+        // Load from files (NO HARDCODED DATA!)
+        library.loadBooksFromFile("data/books.txt");
+        library.loadMagazinesFromFile("data/magazines.txt");
+        library.loadDVDsFromFile("data/dvds.txt");
+        
+        std::cout << "\n";
+        
+        // Display all items
+        library.displayAllItems();
+
+        // Test dynamic_cast
+        library.displayBooksWithAuthors();
+        
+        std::cout << "\n=== Testing Polymorphism ===\n";
+        // Find items by type
+        auto books = library.findItemsByType("Book");
+        auto magazines = library.findItemsByType("Magazine");
+        auto dvds = library.findItemsByType("DVD");
+        
+        std::cout << "Books: " << books.size() << "\n";
+        std::cout << "Magazines: " << magazines.size() << "\n";
+        std::cout << "DVDs: " << dvds.size() << "\n";
+        
+        // Calculate late fees (virtual function - tema specific!)
+        std::cout << "\n=== Late Fee Calculations (Virtual Function) ===\n";
+        if (!books.empty()) {
+            std::cout << "Book '" << books[0]->getTitle() << "': " 
+                      << books[0]->calculateLateFee(10) << " lei (10 days)\n";
+        }
+        if (!magazines.empty()) {
+            std::cout << "Magazine '" << magazines[0]->getTitle() << "': " 
+                      << magazines[0]->calculateLateFee(10) << " lei (10 days)\n";
+        }
+        if (!dvds.empty()) {
+            std::cout << "DVD '" << dvds[0]->getTitle() << "': " 
+                      << dvds[0]->calculateLateFee(10) << " lei (10 days)\n";
+        }
+        
+        std::cout << "\n=== Testing Copy Constructor (Deep Copy) ===\n";
+        Library library2 = library;
+        std::cout << "Original: " << library << "\n";
+        std::cout << "Copy: " << library2 << "\n";
+        
+        std::cout << "\n=== Testing Exception: Remove Item ===\n";
+        library.removeItem("1984");
+        std::cout << "After removal: " << library << "\n";
+        
+        std::cout << "\n=== Testing Exception: Item Not Found ===\n";
+        try {
+            library.removeItem("Non-existent Book");
+        } catch (const ItemNotFoundException& e) {
+            std::cout << "✓ Caught exception: " << e.what() << "\n";
+        }
+        
+        std::cout << "\n=== Testing Exception: Null Item ===\n";
+        try {
+            library.addItem(nullptr);
+        } catch (const InvalidItemException& e) {
+            std::cout << "✓ Caught exception: " << e.what() << "\n";
+        }
+        
+        std::cout << "\n=== Testing Exception: Duplicate Item ===\n";
+        try {
+            Author author("Test", "Test");
+            library.addItem(std::make_unique<Book>("Animal Farm", author, 1945, 3));
+        } catch (const DuplicateItemException& e) {
+            std::cout << "✓ Caught exception: " << e.what() << "\n";
+        }
+        
+        std::cout << "\n=== Testing Static Member ===\n";
+        std::cout << "Total libraries: " << Library::getTotalLibraries() << "\n";
+        
+        {
+            Library tempLib("Temporary Library");
+            std::cout << "After creating temp library: " << Library::getTotalLibraries() << "\n";
+        }
+        std::cout << "After temp library destroyed: " << Library::getTotalLibraries() << "\n";
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Fatal error: " << e.what() << "\n";
+        return 1;
     }
-    std::cout << "\n";
     
-    // Remove a book
-    library.removeBook("1984");
-    library.displayBooks();
-    
-    // Try removing non-existent book
-    library.removeBook("Non-existent Book");
-    
-    // Test unused functions
-    std::cout << "\n=== Testing Unused Functions ===" << "\n";
-    std::cout << "Author country: " << author1.getCountry() << "\n";
-    std::cout << "Book year: " << book3.getYear() << "\n";
-    std::cout << "Book stock: " << book3.getStock() << "\n";
-    
-    // Test setStock
-    Book testBook("Test", author1, 2024, 5);
-    testBook.setStock(10);
-    std::cout << "Updated stock: " << testBook << "\n";
-    
-    std::cout << "Total books in library: " << library.getBookCount() << "\n";
-    
-    std::cout << "\n=== Program finished ===" << "\n";
+    std::cout << "\n=== Program End ===\n";
     return 0;
 }

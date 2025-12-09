@@ -1,0 +1,4 @@
+TIME|TIME Inc|2024|52
+National Geographic|NGS|2024|12
+The Economist|Economist Group|2024|51
+Scientific American|Springer Nature|2024|12

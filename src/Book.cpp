@@ -1,57 +1,64 @@
-#include "Book.h"
+#include "../include/Book.h"
 
-// Constructor
+// Constructor - calls Item constructor!
 Book::Book(const std::string& title, const Author& author, int year, int stock)
-    : title(title), author(author), year(year), stock(stock) {}
+    : Item(title, year), author(author), stock(stock) {
+    std::cout << "Book constructor called for: " << title << "\n";
+}
 
-// Copy constructor (Rule of Three)
+// Copy constructor (M1'den)
 Book::Book(const Book& other)
-    : title(other.title), author(other.author), year(other.year), stock(other.stock) {
+    : Item(other.title, other.year), author(other.author), stock(other.stock) {
     std::cout << "Book copy constructor called for: " << title << "\n";
 }
 
-// Copy assignment operator (Rule of Three)
+// Copy assignment (M1'den)
 Book& Book::operator=(const Book& other) {
+    std::cout << "Book copy assignment called for: " << other.title << "\n";
     if (this != &other) {
+        // Item part
         title = other.title;
-        author = other.author;
         year = other.year;
+        // Book part
+        author = other.author;
         stock = other.stock;
-        std::cout << "Book copy assignment called for: " << title << "\n";
     }
     return *this;
 }
 
-// Destructor (Rule of Three)
+// Destructor (M1'den)
 Book::~Book() {
     std::cout << "Book destructor called for: " << title << "\n";
 }
 
-// Getters
-const std::string& Book::getTitle() const {
-    return title;
+// Virtual function implementations
+void Book::display() const {
+    std::cout << "Book: \"" << title << "\" by " << author 
+              << ", Year: " << year << ", Stock: " << stock;
 }
 
+Book* Book::clone() const {
+    return new Book(*this);
+}
+
+std::string Book::getType() const {
+    return "Book";
+}
+
+double Book::calculateLateFee(int days) const {
+    // Books: 0.5 lei per day
+    return days * 0.5;
+}
+
+// Getters (M1'den)
 const Author& Book::getAuthor() const {
     return author;
-}
-
-int Book::getYear() const {
-    return year;
 }
 
 int Book::getStock() const {
     return stock;
 }
 
-// Setter
 void Book::setStock(int newStock) {
     stock = newStock;
-}
-
-// operator
-std::ostream& operator<<(std::ostream& os, const Book& book) {
-    os << "\"" << book.title << "\" by " << book.author 
-       << " (" << book.year << ") - Stock: " << book.stock;
-    return os;
 }
