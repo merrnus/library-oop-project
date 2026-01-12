@@ -2,9 +2,14 @@
 #include "../include/Book.h"
 #include "../include/Magazine.h"
 #include "../include/DVD.h"
+#include "../include/AudioBook.h"
 #include "../include/Author.h"
+#include "../include/ItemCollection.h"
+#include "../include/ItemHelpers.h"
+#include "../include/LibraryManager.h"
 #include <iostream>
 #include <memory>
+
 
 int main() {
     std::cout << "=== Library Management System M2 ===\n\n";
@@ -101,6 +106,33 @@ int main() {
             std::cout << "After creating temp library: " << Library::getTotalLibraries() << "\n";
         }
         std::cout << "After temp library destroyed: " << Library::getTotalLibraries() << "\n";
+
+        std::cout << "\n=== M3: TEMPLATE CLASS TEST (ItemCollection) ===\n";
+        ItemCollection<Book> bookCollection;
+        bookCollection.add(std::make_unique<Book>("Test Book 1", Author("Author1", "Country1"), 2020, 5));
+        bookCollection.add(std::make_unique<Book>("Test Book 2", Author("Author2", "Country2"), 2021, 3));
+        std::cout << "Book collection size: " << bookCollection.size() << "\n";
+        
+        ItemCollection<Magazine> magazineCollection;
+        magazineCollection.add(std::make_unique<Magazine>("Test Mag 1", "Pub1", 2022, 10));
+        std::cout << "Magazine collection size: " << magazineCollection.size() << "\n";
+        
+        std::cout << "\n=== M3: TEMPLATE FUNCTION TEST ===\n";
+        auto allBooks = library.findItemsByType("Book");
+        if (!allBooks.empty()) {
+            std::cout << "Sorting books...\n";
+            sortItemsByTitle(allBooks);
+            std::cout << "First book after sort: " << allBooks[0]->getTitle() << "\n";
+        }
+        
+        auto recentBooks = filterItemsByYear(allBooks, 1980, 2000);
+        std::cout << "Books from 1980-2000: " << recentBooks.size() << "\n";
+        
+        std::cout << "\n=== M3: SINGLETON TEST ===\n";
+        std::cout << "LibraryManager total: " << LibraryManager::getInstance().getLibraryCount() << "\n";
+        
+        std::cout << "\n=== M3: FACTORY PATTERN ===\n";
+        std::cout << "Factory used in loadFromFile functions!\n";
         
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << "\n";
@@ -108,5 +140,6 @@ int main() {
     }
     
     std::cout << "\n=== Program End ===\n";
+
     return 0;
 }

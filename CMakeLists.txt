@@ -57,6 +57,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     src/DVD.cpp
     src/AudioBook.cpp
     src/Library.cpp
+    src/LibraryManager.cpp
+    src/ItemFactory.cpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE include)

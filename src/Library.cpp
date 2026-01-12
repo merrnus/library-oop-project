@@ -7,6 +7,8 @@
 #include "../include/AudioBook.h"
 #include <fstream>
 #include <sstream>
+#include "../include/ItemFactory.h"
+#include "../include/LibraryManager.h"
 
 // Static member initialization
 int Library::totalLibraries = 0;
@@ -14,6 +16,7 @@ int Library::totalLibraries = 0;
 // Constructor
 Library::Library(const std::string& name) : name(name) {
     totalLibraries++;
+    LibraryManager::getInstance().registerLibrary(this);
     std::cout << "Library constructor called: " << name << "\n";
 }
 
@@ -37,6 +40,7 @@ Library& Library::operator=(Library other) {
 
 // Destructor
 Library::~Library() {
+    LibraryManager::getInstance().unregisterLibrary(this);
     totalLibraries--;
     std::cout << "Library destructor called: " << name << "\n";
     // Smart pointers auto-delete!
@@ -136,22 +140,10 @@ void Library::loadBooksFromFile(const std::string& filename) {
     
     std::string line;
     while (std::getline(file, line)) {
-        // Parse: title|author_name|author_country|year|stock
-        size_t pos1 = line.find('|');
-        size_t pos2 = line.find('|', pos1 + 1);
-        size_t pos3 = line.find('|', pos2 + 1);
-        size_t pos4 = line.find('|', pos3 + 1);
-        
-        if (pos1 == std::string::npos || pos4 == std::string::npos) continue;
-        
-        std::string title = line.substr(0, pos1);
-        std::string authorName = line.substr(pos1 + 1, pos2 - pos1 - 1);
-        std::string authorCountry = line.substr(pos2 + 1, pos3 - pos2 - 1);
-        int year = std::stoi(line.substr(pos3 + 1, pos4 - pos3 - 1));
-        int stock = std::stoi(line.substr(pos4 + 1));
-        
-        Author author(authorName, authorCountry);
-        addItem(std::make_unique<Book>(title, author, year, stock));
+       auto item = ItemFactory::createFromLine("book", line);
+       if (item) {
+           addItem(std::move(item));
+       }
     }
     
     file.close();
@@ -167,20 +159,11 @@ void Library::loadMagazinesFromFile(const std::string& filename) {
     
     std::string line;
     while (std::getline(file, line)) {
-        // Parse: title|publisher|year|issue_number
-        size_t pos1 = line.find('|');
-        size_t pos2 = line.find('|', pos1 + 1);
-        size_t pos3 = line.find('|', pos2 + 1);
-        
-        if (pos1 == std::string::npos || pos3 == std::string::npos) continue;
-        
-        std::string title = line.substr(0, pos1);
-        std::string publisher = line.substr(pos1 + 1, pos2 - pos1 - 1);
-        int year = std::stoi(line.substr(pos2 + 1, pos3 - pos2 - 1));
-        int issueNumber = std::stoi(line.substr(pos3 + 1));
-        
-        addItem(std::make_unique<Magazine>(title, publisher, year, issueNumber));
-    }
+         auto item = ItemFactory::createFromLine("magazine", line);
+         if (item) {
+              addItem(std::move(item));
+         }
+     }
     
     file.close();
     std::cout << "Loaded magazines from: " << filename << "\n";
@@ -195,21 +178,12 @@ void Library::loadDVDsFromFile(const std::string& filename) {
     
     std::string line;
     while (std::getline(file, line)) {
-        // Parse: title|director|year|duration
-        size_t pos1 = line.find('|');
-        size_t pos2 = line.find('|', pos1 + 1);
-        size_t pos3 = line.find('|', pos2 + 1);
-        
-        if (pos1 == std::string::npos || pos3 == std::string::npos) continue;
-        
-        std::string title = line.substr(0, pos1);
-        std::string director = line.substr(pos1 + 1, pos2 - pos1 - 1);
-        int year = std::stoi(line.substr(pos2 + 1, pos3 - pos2 - 1));
-        int duration = std::stoi(line.substr(pos3 + 1));
-        
-        addItem(std::make_unique<DVD>(title, director, year, duration));
+        auto item = ItemFactory::createFromLine("dvd", line);
+        if (item) {
+            addItem(std::move(item));
+        }
     }
-    
+
     file.close();
     std::cout << "Loaded DVDs from: " << filename << "\n";
 }
@@ -241,24 +215,10 @@ void Library::loadAudioBooksFromFile(const std::string& filename) {
     
     std::string line;
     while (std::getline(file, line)) {
-        // Parse: title|narrator_name|narrator_country|year|duration|format
-        size_t pos1 = line.find('|');
-        size_t pos2 = line.find('|', pos1 + 1);
-        size_t pos3 = line.find('|', pos2 + 1);
-        size_t pos4 = line.find('|', pos3 + 1);
-        size_t pos5 = line.find('|', pos4 + 1);
-        
-        if (pos1 == std::string::npos || pos5 == std::string::npos) continue;
-        
-        std::string title = line.substr(0, pos1);
-        std::string narratorName = line.substr(pos1 + 1, pos2 - pos1 - 1);
-        std::string narratorCountry = line.substr(pos2 + 1, pos3 - pos2 - 1);
-        int year = std::stoi(line.substr(pos3 + 1, pos4 - pos3 - 1));
-        int duration = std::stoi(line.substr(pos4 + 1, pos5 - pos4 - 1));
-        std::string format = line.substr(pos5 + 1);
-        
-        Author narrator(narratorName, narratorCountry);
-        addItem(std::make_unique<AudioBook>(title, narrator, year, duration, format));
+        auto item = ItemFactory::createFromLine("audiobook", line);
+        if (item) {
+            addItem(std::move(item));
+        }
     }
     
     file.close();
